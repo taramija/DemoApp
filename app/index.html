@@ -13,7 +13,9 @@
     <link rel="stylesheet" href="bundle.css">
 </head>
 <body>
-    <div ng-view></div>
+    <div ng-view ng-class="{landing__wrapper: location === '/', landing__wrapper: location === '/#/gallery'}"></div>
+
+    <div class="loader__wrapper"><div class="loader"></div></div>
     <script src="bundle.js"></script>
     <!-- jQuery first, then Bootstrap JS. -->
 <!--     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

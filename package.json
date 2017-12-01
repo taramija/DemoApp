@@ -11,6 +11,7 @@
   "dependencies": {
     "angular": "^1.6.7",
     "animejs": "^2.2.0",
+    "blazy": "^1.8.2",
     "bootstrap": "^4.0.0-beta",
     "charming": "^2.0.1",
     "jquery": "^3.2.1",

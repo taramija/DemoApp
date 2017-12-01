@@ -1,5 +1,5 @@
 
-    <div class="collapse bg-inverse" id="navbarHeader">
+    <div class="collapse bg-inverse lazy" id="navbarHeader">
       <div class="container">
         <div class="row">
           <div class="col-sm-8 py-4">
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="navbar navbar-inverse bg-inverse">
+    <div class="navbar navbar-inverse bg-inverse lazy">
       <div class="container d-flex justify-content-between">
         <a href="#" class="navbar-brand">Album</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,41 +26,55 @@
       </div>
     </div>
 
-    <section class="jumbotron text-center">
+    <section class="jumbotron text-center lazy gallery__slide">
       <div class="container">
-        <h1 class="jumbotron-heading">Album example</h1>
-        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
+
+        <div class="landing__triangle customized"> 
+            <svg viewBox="0 0 340 285">
+                <g fill="none" fill-rule="evenodd" stroke="black" stroke-width="3" class="lines">
+                    <path d="M170 0 L0 280 L340 280 Z"/>
+                </g>
+            </svg> 
+        </div>
+        <h1 class="jumbotron-heading">My Collection</h1>
+        <p class="lead text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil esse et magnam at, ullam inventore veritatis a, dolores aperiam quis nulla! Placeat cum, ratione nisi, quod qui sed est pariatur.</p>
         <p>
-          <a href="#" class="btn btn-primary">Main call to action</a>
-          <a href="#" class="btn btn-secondary">Secondary action</a>
+          <a href="#" class="btn btn-primary">Subcribe My FlickR</a>
+          <a href="#" class="btn btn-secondary">Follow My Facebook</a>
         </p>
       </div>
     </section>
 
-    <div class="album text-muted">
-      <div class="container">
+    <div class="gallery__album">
 
-        <div class="row">
-            <div class="card-columns" style="column-count:4; width: 100%;">
-                <div class="card" ng-repeat="photo in photoList">
-                <img alt="100%x280" style="height: 280px; width: 100%; display: block;" ng-src="http://c1.staticflickr.com/{{photo.farm}}/{{photo.server}}/{{photo.id}}_{{photo.secret}}_m.jpg" data-holder-rendered="true">
-                <div class="card-block p-3">
-                  <h4 class="card-title">{{ photo.title }}</h4>
-                  <p class="card-text">{{ photo.title | randomString }}</p>
-              </div>
-          </div>
-          
+        <div class="container">
+            <div class="row"><h1 class="gallery__heading text-uppercase">Photostream</h1></div>
+            <div class="row">
+                <div class="card-columns" style="width: 100%;">
+                    <div class="card lazy gallery__card" ng-repeat="photo in photoList">
+                        <img style="width: 100%; display: block;" ng-src="http://c1.staticflickr.com/{{photo.farm}}/{{photo.server}}/{{photo.id}}_{{photo.secret}}_m.jpg" data-holder-rendered="true">
+                        <a href="#">
+                            <div class="content">
+                                <h2>{{photo.title}}</h2>
+                                <p class="extra__info__p">A wonderful serenity has taken possession of my entire soul.</p>
+                            </div>
+                        </a>
+                        <div class="card-block p-3">
+                          <h4 class="card-title">{{ photo.title }}</h4>
+                          <p class="card-text">{{ photo.title | randomString }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-      </div>
     </div>
 
-    <footer class="text-muted">
-      <div class="container">
-        <p class="float-right">
-          <a href="#">Back to top</a>
-        </p>
-        <p>Album example is © Bootstrap, but please download and customize it for yourself!</p>
-        <p>New to Bootstrap? <a href="../../">Visit the homepage</a> or read our <a href="../../getting-started/">getting started guide</a>.</p>
-      </div>
+    <footer class="lazy">
+        <div class="container">
+            <p class="float-right">
+              <a href="#">Back to top</a>
+            </p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam laudantium, beatae facere est repellendus debitis.</p>
+            <p>New member? <a href="../../">Visit my homepage</a> or read my <a href="../../getting-started/">blog</a>.</p>
+        </div>
     </footer>

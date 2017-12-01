@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import anime from 'animejs';
 import charm from 'charming';
-
+import blazy from 'blazy';
 
 window.Popper = require('popper.js');
 window.jQuery = $;
@@ -14,7 +14,13 @@ const bootstrap = require('bootstrap');
 // Angular app ini
 var app = angular.module("demoApp",['ngRoute']);
 
-app.config(['$routeProvider',function($routeProvider){
+/* ----------------------- ROUTES --------------------------*/
+// Routes configuration
+app.config(['$routeProvider','$locationProvider',function($routeProvider,$locationProvider){
+	// Fix hash bang
+	$locationProvider.hashPrefix('');
+
+	// Setup router
 	$routeProvider
 	.when('/',{
 		templateUrl: 'landing.html',
@@ -22,12 +28,45 @@ app.config(['$routeProvider',function($routeProvider){
 	})
 	.when('/gallery',{
 		templateUrl: 'gallery.html',
-		controller: 'galleryCtrl'
+		controller: 'galleryCtrl',
+		resolve: {}
 	});
+
 }]);
 
+// Loader configuration
+app.run(['$rootScope','$timeout','$location',function($rootScope,$timeout,$location) {
+
+	// Animate loader overlay and kick in lazyload effect (effect only)
+	$rootScope.$on("$routeChangeStart", function (event, next, current) {
+		if(next.resolve){
+			document.querySelector('body').style.overflow = "hidden";
+			document.querySelector('.loader__wrapper').style.visibility = "visible";
+
+			$timeout(function(){
+				document.querySelector('body').style.overflow = "auto";
+				document.querySelector('.loader__wrapper').style.visibility = "hidden";
+			},1500).then(function(){
+				$(window).scroll(lazyload);
+				$(window).resize(lazyload);
+				lazyload();
+			});
+		}
+	});
+
+	// Add specific class to ng-view upon route changing
+	$rootScope.$on('$routeChangeSuccess', function() {
+        $rootScope.location = $location.path();
+    });
+}]);
+
+/* -------------------- CONTROLLERS ------------------------*/
+// Landing page Controller
 app.controller("landingCtrl",['$scope', 
 	function($scope){
+
+	/*----- trigger poppoer -------*/
+	$('[data-toggle="popover"]').popover();
 
 	/*----- landing intro animation ------ */
 	function introAnimationInit(){
@@ -202,18 +241,59 @@ app.controller("landingCtrl",['$scope',
 
 }]);
 
+// Gallery page Controller
 app.controller("galleryCtrl",['$scope', 'flickrService', 
 	function($scope, flickrService){
 
-		// var lorem = new Lorem();
-		// var s = lorem.createLorem('2s');
-		// console.log(s);
-
+	// Fetch data from flickr API
 	flickrService.getPhotoList().then(function(response){
 		$scope.photoList = response.data.photoset.photo;
 	});
+
+
+	// Draw 2nd triangle on gallery page
+	function drawTriangleInit(){
+		const DOM = {};
+		DOM.triangle = document.querySelector('.landing__triangle.customized');
+		DOM.trianglePath = document.querySelector('.landing__triangle.customized .lines path');
+		DOM.path = anime.path('.landing__triangle.customized .lines path');
+
+		var triangleTimeline = anime.timeline();
+
+		triangleTimeline
+		.add({
+			targets: DOM.trianglePath,
+			strokeDashoffset: [anime.setDashoffset, 0],
+			delay: 2000,
+			duration: 1800,
+			easing: 'easeInOutSine'
+		})
+		.add({
+			targets: DOM.triangle,
+			opacity: {value: 0.2, duration: 200},
+			easing: 'easeInOutSine'
+		})
+		.add({
+			targets: DOM.triangle,
+			scale: {value: 0.8, duration: 200},
+			offset: '-=200',
+			easing: 'easeInOutSine'
+		});
+		// animate the triangle
+		// anime({
+		// 	targets: DOM.triangle,
+		// 	strokeDashoffset: [anime.setDashoffset, 0],
+		// 	easing: 'easeInOutSine',
+		// 	delay: 2000,
+		// 	duration: 1800,
+		// 	opacity: {value: 0.2, duration: 200, delay: 2000}
+		// });
+	}
+
+	drawTriangleInit();
 }]);
 
+/* ----------------------- FILTERS --------------------------*/
 app.filter("randomString",function(){
 	return function(x){
 		const ranNum = Math.floor((Math.random() * 24) + 1);
@@ -222,6 +302,7 @@ app.filter("randomString",function(){
 	}
 });
 
+/* ----------------------- SERVICES --------------------------*/
 app.service("memberList",function(){
 
 });
@@ -258,4 +339,19 @@ app.service("flickrService",['$http', function ($http){
 	};
 }]);
 
+
+// Lazy load effect
+function lazyload(){
+   var wt = $(window).scrollTop();    //* top of the window
+   var wb = wt + $(window).height();  //* bottom of the window
+
+   $(".lazy").each(function(){
+      var ot = $(this).offset().top;  //* top of object (i.e. advertising div)
+      var ob = ot + $(this).height(); //* bottom of object
+
+      if(!$(this).attr("loaded") && wt<=ob && wb >= ot){
+         $(this).attr("loaded",true);
+      }
+   });
+}
 // https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=5a3b4f8f0e2f427356ee6b032eb6c929&photoset_id=72157685528708795&user_id=67108637@N06
